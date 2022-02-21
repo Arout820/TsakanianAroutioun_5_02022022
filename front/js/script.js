@@ -36,8 +36,8 @@ fetch("http://localhost:3000/api/products")
             image.setAttribute("alt", value[i].altTxt);
 
             // création d'une variable dans l'url pour la redirecation sur la page produit
-            let redirection = `product.html?id=${value[i]._id}`;
-            link.setAttribute("href", redirection);
+            let redirect = `product.html?id=${value[i]._id}`;
+            link.setAttribute("href", redirect);
         }
     })
     .catch(err => {

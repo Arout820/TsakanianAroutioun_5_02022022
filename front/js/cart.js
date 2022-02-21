@@ -196,7 +196,7 @@ const lastName = document.querySelector("#lastName");
 const address = document.querySelector("#address");
 const city = document.querySelector("#city");
 const email = document.querySelector("#email");
-const command = document.querySelector("#order");
+const submit = document.querySelector("#order");
 
 const firstNameError = document.querySelector("#firstNameErrorMsg");
 const lastNameError = document.querySelector("#lastNameErrorMsg");
@@ -341,7 +341,7 @@ class Contact {
 
 // bouton commande pour faire les tests et récupérer les informations contact et produit si test validé
 
-command.addEventListener("click", event => {
+submit.addEventListener("click", event => {
     event.preventDefault();
 
     if (firstNameValid !== true){
@@ -386,16 +386,21 @@ command.addEventListener("click", event => {
                     'Content-Type' : 'application/json',
                 },
             });
+        
+        let hey = "";
 
         sendPurchaseToApi.then(async(res) =>{
             try{
-                console.log(await res.json());
-
+                let resultat = await res.json();
+                console.log(resultat);
+                window.location = `confirmation.html?orderId=${resultat.orderId}`;
+                console.log(hey);
             } catch(err){
                 console.log(err);
             }
         })
 
+        console.log(sendPurchaseToApi);
     }
 })
 

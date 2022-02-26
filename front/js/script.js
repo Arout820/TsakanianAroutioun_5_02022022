@@ -1,6 +1,9 @@
-// appel de l'api pour récuper les produits dans la page accueile
+// récupération du fetch dans une variable produits
 
-fetch("http://localhost:3000/api/products")
+const products = fetch("http://localhost:3000/api/products"); 
+
+// appel de l'api pour récuper les produits dans la page accueil
+products
     .then(res => {
         if (res.ok){
             return res.json();

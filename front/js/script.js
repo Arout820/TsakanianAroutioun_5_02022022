@@ -22,9 +22,7 @@ productsFetch
 
             // ajout des éléments dans le html
             items.appendChild(link).appendChild(article);
-            article.appendChild(image);
-            article.appendChild(title);
-            article.appendChild(description);
+            article.append(image, title, description);
 
             // ajout des classes 
             title.classList.add("productName");

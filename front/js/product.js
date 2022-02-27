@@ -1,17 +1,17 @@
 // recuperer l'id'dans dans l'url gràce à la méthode searchParams
-
 let url = new URL(document.URL);
 let id = url.searchParams.get("id");
 
-// faire appel à l'api du produit demandé
+// récupération du fetch dans une variable produit
+const product = fetch("http://localhost:3000/api/products/" + id);
 
-fetch("http://localhost:3000/api/products/" + id)
+// faire appel à l'api du produit demandé
+product
     .then(res => {
         if (res.ok){
             return res.json();
         }
     })
-
     .then(value => {
                 // selection de l'image du produit
                 const image = document.createElement("img");
@@ -28,7 +28,6 @@ fetch("http://localhost:3000/api/products/" + id)
                 description.innerText = value.description;
 
                 // selection des differentes couleurs possibles
-
                 for (i in value.colors){
                     const color = document.createElement("option");
                     document.querySelector("#colors").appendChild(color);
@@ -37,7 +36,6 @@ fetch("http://localhost:3000/api/products/" + id)
                 }
                 
                 // mise en place du produit
-
                 class Product {
                     constructor(id,quantity,color){
                         this.id = id;
@@ -46,14 +44,14 @@ fetch("http://localhost:3000/api/products/" + id)
                     }
                 }
                 
-                // recuperer la quantité et la couleur saisie
-
+                // recuperer la quantité saisie
                 let choosenQuantity = document
                 .querySelector("#quantity")
                 .addEventListener("change", event => {
                     choosenQuantity = event.target.value;
                 });
                 
+                // recuperer la couleur saisie
                 let choosenColor = document
                 .querySelector("#colors")
                 .addEventListener("change", event => {
@@ -71,14 +69,19 @@ fetch("http://localhost:3000/api/products/" + id)
             
                     let basket = JSON.parse(localStorage.getItem("product"));
 
-                    // on regarde si le produit à envoyer a une couleur et une quantité
+                    // fonction pour ajouter le produit dans le locale storage et afficher un message
+                    function AddProductinLocalStorage(){
+                        basket.push(storedProduct);
+                        localStorage.setItem("product", JSON.stringify(basket));
+                        alert(`+ ${productQuantityInt} Vous avez ${productQuantityInt} / 100 quantités de ce produit dans le panier.`);
+                    };
 
+                    // on regarde si le produit à envoyer a une couleur et une quantité
                     if (storedProduct.color == '' || storedProduct.color == undefined|| storedProduct.quantity == NaN){
                         alert("Séléctionnez la couleur et la quantité de votre commande");
                     } 
                     
                     // si le produit est présent dans le panier, on verifie les quantités grace à l'id et à la couleur
-
                     else if (basket){
                         let test = true;
                         
@@ -103,29 +106,21 @@ fetch("http://localhost:3000/api/products/" + id)
                         } 
 
                         if (test == true) {
-                            basket.push(storedProduct);
-                            localStorage.setItem("product", JSON.stringify(basket));
-                            alert(`+ ${productQuantityInt} Vous avez ${productQuantityInt} / 100 quantités de ce produit dans le panier.`);
+                            AddProductinLocalStorage();
                         }
                     } 
                     
                     // si il n'y a aucun produit dans le panier, on ajoute
-
                     else {   
                         basket = []; 
-                        basket.push(storedProduct);
-                        localStorage.setItem("product", JSON.stringify(basket));
-                        alert(`+ ${productQuantityInt} Vous avez ${productQuantityInt} / 100 quantités de ce product dans le panier.`);
-
+                        AddProductinLocalStorage();
                     }
-
+                    
                     console.log(basket);
                 })
 
                 // ----------------------- FIN ajout au panier 2 ----------------------- //
     })
-    
-    .catch(err => {
-        console.log(err);
+    .catch(error => {
+        console.log(error);
     });
-

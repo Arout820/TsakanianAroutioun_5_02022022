@@ -12,7 +12,20 @@ let quantityToStore = 0;
 let totalPriceToStore = 0;
 let price = 0;
 
-// ------------- Création des products dans le panier ------------- //
+// affichage de certains élément visuels sur la page lorsque le panier est vide
+if (basket.length < 1){
+    totalQuantity.innerText = 0;
+    totalPrice.innerText = 0;
+    const cartAndFormContainer = document.querySelector("#cartAndFormContainer")
+    const emptyBasket = document.createElement("p");
+    
+    cartAndFormContainer.insertBefore(emptyBasket, cartAndFormContainer.children[1]);
+    emptyBasket.innerText = "Le panier est vide"
+    emptyBasket.style.textAlign = "center";    
+    emptyBasket.style.fontSize = "25px";
+}
+
+// ------------- Récupérations des produits dans le panier ------------- //
 
 for (let i in basket){
     
@@ -80,8 +93,7 @@ for (let i in basket){
     
     // récupération du fetch dans une variable produit
     const productFetch = fetch("http://localhost:3000/api/products/" + id);
-    
-    
+
     // utilisation de l'api pour récuper le nom, le prix et l'image d'un produit
     productFetch
         .then(res => {
@@ -333,37 +345,41 @@ submit.addEventListener("click", event => {
     }
 
     if (firstNameValid == true && lastNameValid == true && addressValid == true && cityValid == true && emailValid == true){
-        let contact = new Contact(firstName.value, lastName.value, address.value, city.value, email.value);
-        
-        // On ne va envoyer que les ID des produits car l'API ne prend que les ID
-        let products = [];
-        for(let i in basket){
-            products.push(basket[i].id)
-        }
-
-        const purchase = {products, contact};
-
-        // envoie de donnée à l'API 
-        const sendPurchaseToApi = fetch("http://localhost:3000/api/products/order", {
-                method:"POST",
-                body: JSON.stringify(purchase),
-                headers: {
-                    'Accept': 'application/json', 
-                    'Content-Type' : 'application/json',
-                },
-            });
-        
-        sendPurchaseToApi.then(async(res) => {
-            try{
-                let resultat = await res.json();
-                window.location = `confirmation.html?orderId=${resultat.orderId}`;
-            } catch(error){
-                console.log(error);
+        if (basket.length < 1){
+            alert("Vous n'avez rien dans le panier");
+        } else {
+            let contact = new Contact(firstName.value, lastName.value, address.value, city.value, email.value);
+            
+            // On ne va envoyer que les ID des produits car l'API ne prend que les ID
+            let products = [];
+            for(let i in basket){
+                products.push(basket[i].id)
             }
-        })
 
-        console.log(sendPurchaseToApi);
-    }
+            const purchase = {products, contact};
+
+            // envoie de donnée à l'API 
+            const sendPurchaseToApi = fetch("http://localhost:3000/api/products/order", {
+                    method:"POST",
+                    body: JSON.stringify(purchase),
+                    headers: {
+                        'Accept': 'application/json', 
+                        'Content-Type' : 'application/json',
+                    },
+                });
+            
+            sendPurchaseToApi.then(async(res) => {
+                try{
+                    let resultat = await res.json();
+                    window.location = `confirmation.html?orderId=${resultat.orderId}`;
+                } catch(error){
+                    console.log(error);
+                }
+            })
+
+            console.log(sendPurchaseToApi);
+        }
+    }   
 })
 
 

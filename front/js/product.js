@@ -19,6 +19,10 @@ productFetch
                 image.setAttribute("src", value.imageUrl,);
                 image.setAttribute("alt", value.altTxt);
 
+                // affichage du nom
+                const name = document.querySelector("#title");
+                name.innerText = value.name;
+
                 // affichage du prix
                 const price = document.querySelector("#price");
                 price.innerText = value.price;

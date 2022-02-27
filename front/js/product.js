@@ -3,10 +3,10 @@ let url = new URL(document.URL);
 let id = url.searchParams.get("id");
 
 // récupération du fetch dans une variable produit
-const product = fetch("http://localhost:3000/api/products/" + id);
+const productFetch = fetch("http://localhost:3000/api/products/" + id);
 
 // faire appel à l'api du produit demandé
-product
+productFetch
     .then(res => {
         if (res.ok){
             return res.json();

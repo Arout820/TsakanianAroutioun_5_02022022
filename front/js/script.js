@@ -1,9 +1,8 @@
 // récupération du fetch dans une variable produits
-
-const products = fetch("http://localhost:3000/api/products"); 
+const productsFetch = fetch("http://localhost:3000/api/products"); 
 
 // appel de l'api pour récuper les produits dans la page accueil
-products
+productsFetch
     .then(res => {
         if (res.ok){
             return res.json();
@@ -28,7 +27,6 @@ products
             article.appendChild(description);
 
             // ajout des classes 
-
             title.classList.add("productName");
             description.classList.add("productDescription");
 
@@ -43,6 +41,6 @@ products
             link.setAttribute("href", redirect);
         }
     })
-    .catch(err => {
-        console.log(err);
+    .catch(error => {
+        console.log(error);
     });

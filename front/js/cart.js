@@ -1,18 +1,13 @@
-
-
 // récupération du panier avec transformation du JSON en objet Javascript
-
 let basket = JSON.parse(localStorage.getItem("product"));
 console.log(basket);
 
 // selection des éléments
-
 let elementItem = document.querySelector("#cart__items");
 let totalQuantity = document.querySelector("#totalQuantity");
 let totalPrice = document.querySelector("#totalPrice");
 
-// création de variable pour la quantité et le prix totale
-
+// création de variables pour la quantité et le prix totale
 let quantityToStore = 0;
 let totalPriceToStore = 0;
 let price = 0;
@@ -24,7 +19,6 @@ for (let i in basket){
     let product = basket[i];
     
     // création des éléments HTML 
-    
     const article = document.createElement("article");
     const divCartItemImage = document.createElement("div");
     const image = document.createElement("img");
@@ -41,7 +35,6 @@ for (let i in basket){
     const deleteProduct = document.createElement("p");
     
     // insertion des éléments HTML
-
     elementItem.appendChild(article);
     article.appendChild(divCartItemImage);
     divCartItemImage.appendChild(image);
@@ -58,7 +51,6 @@ for (let i in basket){
     divCartItemContentSettingsDelete.appendChild(deleteProduct);
     
     // insertion des classes
-        
     article.classList.add("cart__item");
     divCartItemImage.classList.add("cart__item__img");
     divCartItemContent.classList.add("cart__item__content");
@@ -70,7 +62,6 @@ for (let i in basket){
     deleteProduct.classList.add("deleteItem");
 
     // insertion des attributs
-
     article.setAttribute("data-id", product["id"]);
     article.setAttribute("data-color", product["color"]);
     changeProductQuantity.setAttribute("type","number");
@@ -80,44 +71,43 @@ for (let i in basket){
     changeProductQuantity.setAttribute("value", product["quantity"]);
     
     // ajout d'élements texte
-
     deleteProduct.innerText = "Supprimer"
     productColor.innerText = product["color"];
     productQuantity.innerText = "Qté :";
     
-    // utilisation de l'api pour récuper le nom, le prix et l'image d'un produit
-    
+    // création d'une variable id du produit
     let id = article.getAttribute("data-id"); 
     
-    fetch("http://localhost:3000/api/products/" + id)
-    .then(res => {
-        if (res.ok){
-            return res.json();
-        }
-    })
-
-    .then(value => {
-        if (id == value._id){
-            
-            // insértion des éléments descriptives d'un produit dans le panier
-            
-            productName.innerText = value.name;
-            image.setAttribute("src", value.imageUrl);
-            productPrice.innerText = value.price + " €";
-            
-            // insértion quantité totale et prix total
-            
-            price = value.price;
-            quantityToStore += product["quantity"];
-            totalPriceToStore += product["quantity"] * price;
-            totalQuantity.innerText = quantityToStore;
-            totalPrice.innerText = totalPriceToStore;
-        }
-    })
-
-    .catch(err => {
-
-    });
+    // récupération du fetch dans une variable produit
+    const productFetch = fetch("http://localhost:3000/api/products/" + id);
+    
+    
+    // utilisation de l'api pour récuper le nom, le prix et l'image d'un produit
+    productFetch
+        .then(res => {
+            if (res.ok){
+                return res.json();
+            }
+        })
+        .then(value => {
+            if (id == value._id){
+                
+                // insértion des éléments descriptives d'un produit dans le panier
+                productName.innerText = value.name;
+                image.setAttribute("src", value.imageUrl);
+                productPrice.innerText = value.price + " €";
+                
+                // insértion quantité totale et prix total
+                price = value.price;
+                quantityToStore += product["quantity"];
+                totalPriceToStore += product["quantity"] * price;
+                totalQuantity.innerText = quantityToStore;
+                totalPrice.innerText = totalPriceToStore;
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
 }
 
 // --------------- Changement de la quantité des products --------------- //
@@ -142,13 +132,17 @@ document.querySelectorAll(".itemQuantity").forEach(item =>{
 // ----------------- Suppression d'un produit du panier ----------------- //
 
 document.querySelectorAll(".deleteItem").forEach(item =>{
+    
+    // changemeent de propriété css
     item.style.display = "inline-block"
     
+    // modification lors du survol
     function MouseEnter(){
         item.style.fontWeight = "600";
         item.style.cursor = "pointer";
     }
 
+    // modification lorsque la souris ne sourvole plus
     function MouseLeave(){
         item.style.fontWeight = "300";
         item.style.cursor = "initial";
@@ -157,7 +151,6 @@ document.querySelectorAll(".deleteItem").forEach(item =>{
     item.onmouseleave = MouseLeave;
     
     // suppression lorsque cliqué
-
     item.addEventListener("click", event =>{
         item.style.fontWeight= ""
         let articleProduct = item.closest("article"); 
@@ -182,7 +175,6 @@ document.querySelectorAll(".deleteItem").forEach(item =>{
 // ---------------------------- PASSER LA COMMANDE ---------------------------- //
 
 // Déclaration de test pour la validité des éléments
-
 let firstNameValid = false;
 let lastNameValid = false;
 let addressValid = false;
@@ -190,7 +182,6 @@ let cityValid = false;
 let emailValid = false;
 
 // Recuperation des élements
-
 const firstName = document.querySelector("#firstName");
 const lastName = document.querySelector("#lastName");
 const address = document.querySelector("#address");
@@ -205,7 +196,6 @@ const cityError = document.querySelector("#cityErrorMsg");
 const emailError = document.querySelector("#emailErrorMsg");
 
 // Verication instantanée si les éléments sont corrects et affichge visuel 
-
 firstName.addEventListener("change", () => {
     validationfirstName();
 })
@@ -228,18 +218,14 @@ email.addEventListener("change", () => {
 
 
 // fonction validation du prénom
+function validationfirstName(){
+let regularExpressions = /^[a-zA-Zà-œÀ-Ÿ][a-zA-Zà-œÀ-Ÿ-]{0,200}[a-zA-Zà-œÀ-Ÿ]$/g;
 
-function validationfirstName() {
-var regularExpressions = /^[a-zA-Zà-œÀ-Ÿ][a-zA-Zà-œÀ-Ÿ-]{0,200}[a-zA-Zà-œÀ-Ÿ]$/g;
-
-if (regularExpressions.test(firstName.value))
-{
+if (regularExpressions.test(firstName.value)){
 firstNameError.innerText = "Le prénom est valide";
 firstNameValid = true;
 firstNameError.style.color = "#80ff80";
-}
-else
-{
+} else {
 firstNameError.innerText = "Le prénom n'est pas valide";
 firstNameValid = false;
 firstNameError.style.color = "#fbbcbc";
@@ -248,18 +234,14 @@ return false;
 }
 
 // fonction validation du nom
+function validationlastName(){
+let regularExpressions = /^[a-zA-Zà-œÀ-Ÿ][a-zA-Zà-œÀ-Ÿ-]{0,200}[a-zA-Zà-œÀ-Ÿ]$/g;
 
-function validationlastName() {
-var regularExpressions = /^[a-zA-Zà-œÀ-Ÿ][a-zA-Zà-œÀ-Ÿ-]{0,200}[a-zA-Zà-œÀ-Ÿ]$/g;
-
-if (regularExpressions.test(lastName.value))
-{
+if (regularExpressions.test(lastName.value)){
 lastNameError.innerText = "Le nom est valide";
 lastNameValid = true;
 lastNameError.style.color = "#80ff80";
-}
-else
-{
+} else {
 lastNameError.innerText = "Le nom n'est pas valide";
 lastNameValid = false;
 lastNameError.style.color = "#fbbcbc";
@@ -268,18 +250,14 @@ return false;
 }
 
 // fonction validation de l'adresse
+function validationaddress(){
+let regularExpressions = /^[0-9]{0,6}[ ][a-zA-Zà-œÀ-Ÿ -]{0,200}[a-zA-Zà-œÀ-Ÿ]$/g;
 
-function validationaddress() {
-var regularExpressions = /^[0-9]{0,6}[ ][a-zA-Zà-œÀ-Ÿ -]{0,200}[a-zA-Zà-œÀ-Ÿ]$/g;
-
-if (regularExpressions.test(address.value))
-{
+if (regularExpressions.test(address.value)){
 addressError.innerText = "L'adresse est valide";
 addressValid = true;
 addressError.style.color = "#80ff80";
-}
-else
-{
+} else {
 addressError.innerText = "L'adresse n'est pas valide";
 addressValid = false;
 addressError.style.color = "#fbbcbc";
@@ -288,18 +266,14 @@ return false;
 }
 
 // fonction validation de la ville
+function validationcity(){
+let regularExpressions = /^[a-zA-Zà-œÀ-Ÿ][a-zA-Zà-œÀ-Ÿ\- ]{1,180}[a-zA-Zà-œÀ-Ÿ]{1,180}$/g;
 
-function validationcity() {
-var regularExpressions = /^[a-zA-Zà-œÀ-Ÿ][a-zA-Zà-œÀ-Ÿ\- ]{1,180}[a-zA-Zà-œÀ-Ÿ]{1,180}$/g;
-
-if (regularExpressions.test(city.value))
-{
+if (regularExpressions.test(city.value)){
 cityError.innerText = "La ville est valide";
 cityValid = true;
 cityError.style.color = "#80ff80";
-}
-else
-{
+} else {
 cityError.innerText = "La ville n'est pas valide";
 cityValid = false;
 cityError.style.color = "#fbbcbc";
@@ -308,18 +282,14 @@ return false;
 }
 
 // fonction validation de l'email
+function validationEmail(){
+let regularExpressions = /^[a-zA-z][a-zA-z0-9.-]{2,85}@[a-zA-z0-9]{2,84}\.[a-zA-z]{2,84}$/g;
 
-function validationEmail() {
-var regularExpressions = /^[a-zA-z][a-zA-z0-9.-]{2,85}@[a-zA-z0-9]{2,84}\.[a-zA-z]{2,84}$/g;
-
-if (regularExpressions.test(email.value))
-{
+if (regularExpressions.test(email.value)){
 emailError.innerText = "L'adresse mail est valide";
 emailValid = true;
 emailError.style.color = "#80ff80";
-}
-else
-{
+} else {
 emailError.innerText = "L'adresse mail n'est pas valide";
 emailValid = false;
 emailError.style.color = "#fbbcbc";
@@ -328,7 +298,6 @@ return false;
 }
 
 // récuperer les informations du Contact
-
 class Contact {
     constructor(firstName,lastName,address,city,email){
         this.firstName = firstName;
@@ -340,7 +309,6 @@ class Contact {
 }
 
 // bouton commande pour faire les tests et récupérer les informations contact et produit si test validé
-
 submit.addEventListener("click", event => {
     event.preventDefault();
 
@@ -365,10 +333,9 @@ submit.addEventListener("click", event => {
     }
 
     if (firstNameValid == true && lastNameValid == true && addressValid == true && cityValid == true && emailValid == true){
-        let contact = new Contact(firstName.value, lastName.value, address.value, city.value, email.value, basket);
+        let contact = new Contact(firstName.value, lastName.value, address.value, city.value, email.value);
         
-        // On ne va envoyer que les ID des produits 
-
+        // On ne va envoyer que les ID des produits car l'API ne prend que les ID
         let products = [];
         for(let i in basket){
             products.push(basket[i].id)
@@ -377,7 +344,6 @@ submit.addEventListener("click", event => {
         const purchase = {products, contact};
 
         // envoie de donnée à l'API 
-        
         const sendPurchaseToApi = fetch("http://localhost:3000/api/products/order", {
                 method:"POST",
                 body: JSON.stringify(purchase),
@@ -387,16 +353,12 @@ submit.addEventListener("click", event => {
                 },
             });
         
-        let hey = "";
-
-        sendPurchaseToApi.then(async(res) =>{
+        sendPurchaseToApi.then(async(res) => {
             try{
                 let resultat = await res.json();
-                console.log(resultat);
                 window.location = `confirmation.html?orderId=${resultat.orderId}`;
-                console.log(hey);
-            } catch(err){
-                console.log(err);
+            } catch(error){
+                console.log(error);
             }
         })
 

@@ -81,7 +81,7 @@ productFetch
                     };
 
                     // on regarde si le produit à envoyer a une couleur et une quantité
-                    if (storedProduct.color == '' || storedProduct.color == undefined|| storedProduct.quantity == NaN){
+                    if (storedProduct.color == '' || storedProduct.color == undefined|| storedProduct.quantity == NaN || storedProduct.quantity == 0){
                         alert("Séléctionnez la couleur et la quantité de votre commande");
                     } 
                     

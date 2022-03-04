@@ -132,9 +132,14 @@ document.querySelectorAll(".itemQuantity").forEach(item =>{
             if (articleProduct.getAttribute("data-id") == basket[i]["id"]){
                 if(articleProduct.getAttribute("data-color") == basket[i]["color"]){
                     let quantitySelected = parseInt(event.target.value);
-                    basket[i]["quantity"] = quantitySelected;
-                    localStorage.setItem("product", JSON.stringify(basket));
-                    window.location.href = document.URL;
+                    if(quantitySelected > 100){
+                        alert("Vous ne pouvez pas dépasser 100 articles similaires merci")
+                        window.location.href = document.URL;
+                    } else {
+                        basket[i]["quantity"] = quantitySelected;
+                        localStorage.setItem("product", JSON.stringify(basket));
+                        window.location.href = document.URL;
+                    }
                 }      
             }
         }
@@ -145,7 +150,7 @@ document.querySelectorAll(".itemQuantity").forEach(item =>{
 
 document.querySelectorAll(".deleteItem").forEach(item =>{
     
-    // changemeent de propriété css
+    // changement de propriété css
     item.style.display = "inline-block"
     
     // modification lors du survol

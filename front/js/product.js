@@ -31,7 +31,7 @@ productFetch
     description.innerText = value.description;
 
     // selection des differentes couleurs possibles
-    for (i in value.colors) {
+    for (const i in value.colors) {
       const color = document.createElement('option');
       document.querySelector('#colors').appendChild(color);
       color.setAttribute('value', value.colors[i]);
@@ -87,7 +87,7 @@ productFetch
       else if (basket) {
         let test = true;
 
-        for (let i in basket) {
+        for (const i in basket) {
           let product = basket[i];
 
           if (product['id'] == value._id) {

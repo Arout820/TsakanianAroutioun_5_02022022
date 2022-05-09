@@ -9,7 +9,7 @@ productsFetch
     }
   })
   .then((value) => {
-    for (i in value) {
+    for (const i in value) {
       console.log(value[i]);
 
       // créations des élements pour le html

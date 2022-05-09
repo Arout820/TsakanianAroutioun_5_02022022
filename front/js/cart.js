@@ -27,7 +27,7 @@ if (basket.length < 1) {
 
 // ------------- Récupérations des produits dans le panier ------------- //
 
-for (let i in basket) {
+for (const i in basket) {
   let product = basket[i];
 
   // création des éléments HTML
@@ -126,7 +126,7 @@ document.querySelectorAll('.itemQuantity').forEach((item) => {
   item.addEventListener('change', (event) => {
     let articleProduct = item.closest('article');
 
-    for (let i in basket) {
+    for (const i in basket) {
       if (articleProduct.getAttribute('data-id') == basket[i]['id']) {
         if (articleProduct.getAttribute('data-color') == basket[i]['color']) {
           let quantitySelected = parseInt(event.target.value);
@@ -169,7 +169,7 @@ document.querySelectorAll('.deleteItem').forEach((item) => {
     item.style.fontWeight = '';
     let articleProduct = item.closest('article');
 
-    for (let i in basket) {
+    for (const i in basket) {
       if (articleProduct.getAttribute('data-id') == basket[i]['id']) {
         if (articleProduct.getAttribute('data-color') == basket[i]['color']) {
           let myIndex = basket.indexOf(basket[i]);
@@ -359,7 +359,7 @@ submit.addEventListener('click', (event) => {
 
       // On ne va envoyer que les ID des produits car l'API ne prend que les ID
       let products = [];
-      for (let i in basket) {
+      for (const i in basket) {
         products.push(basket[i].id);
       }
 

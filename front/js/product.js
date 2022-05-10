@@ -77,7 +77,7 @@ productFetch
       if (
         storedProduct.color == '' ||
         storedProduct.color == undefined ||
-        storedProduct.quantity == NaN ||
+        Number.isNaN(storedProduct.quantity) ||
         storedProduct.quantity == 0
       ) {
         alert('Séléctionnez la couleur et la quantité de votre commande');

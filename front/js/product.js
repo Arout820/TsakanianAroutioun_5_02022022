@@ -1,8 +1,8 @@
 // recuperer l'id'dans dans l'url gràce à la méthode searchParams
 let url = new URL(document.URL);
-let id = url.searchParams.get('id');
+let productId = url.searchParams.get('id');
 // récupération du fetch dans une variable produit
-const productFetch = fetch('http://localhost:3000/api/products/' + id);
+const productFetch = fetch(`http://localhost:3000/api/products/${productId}`);
 
 // faire appel à l'api du produit demandé
 productFetch
@@ -90,28 +90,32 @@ productFetch
         for (const i in basket) {
           let product = basket[i];
 
-          if (product['id'] == value._id) {
-            if (product['color'] == storedProduct.color) {
-              if (product['quantity'] + productQuantityInt < 101) {
-                product['quantity'] += productQuantityInt;
-                localStorage.setItem('product', JSON.stringify(basket));
-                alert(
-                  `+ ${productQuantityInt} Vous avez ${product['quantity']} / 100 quantités de ce produit dans le panier.`
-                );
-                test = false;
-                break;
-              } else {
-                alert(
-                  `Vous avez déjà ${product['quantity']} / 100 quantités de ce produit dans le panier. Vous ne pouvez pas dépasser 100 produits similaires merci.`
-                );
-                test = false;
-                break;
-              }
-            }
+          if (
+            product['id'] == value._id &&
+            product['color'] == storedProduct.color &&
+            product['quantity'] + productQuantityInt < 101
+          ) {
+            product['quantity'] += productQuantityInt;
+            localStorage.setItem('product', JSON.stringify(basket));
+            alert(
+              `+ ${productQuantityInt} Vous avez ${product['quantity']} / 100 quantités de ce produit dans le panier.`
+            );
+            test = false;
+            break;
+          } else if (
+            product['id'] == value._id &&
+            product['color'] == storedProduct.color &&
+            product['quantity'] + productQuantityInt > 100
+          ) {
+            alert(
+              `Vous avez déjà ${product['quantity']} / 100 quantités de ce produit dans le panier. Vous ne pouvez pas dépasser 100 produits similaires merci.`
+            );
+            test = false;
+            break;
           }
         }
 
-        if (test == true) {
+        if (test) {
           AddProductinLocalStorage();
         }
       }
@@ -121,8 +125,6 @@ productFetch
         basket = [];
         AddProductinLocalStorage();
       }
-
-      console.log(basket);
     });
 
     // ----------------------- FIN ajout au panier 2 ----------------------- //

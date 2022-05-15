@@ -165,7 +165,7 @@ document.querySelectorAll('.deleteItem').forEach((item) => {
   item.onmouseleave = MouseLeave;
 
   // suppression lorsque cliqué
-  item.addEventListener('click', (event) => {
+  item.addEventListener('click', () => {
     item.style.fontWeight = '';
     let articleProduct = item.closest('article');
 
@@ -232,7 +232,7 @@ email.addEventListener('change', () => {
 
 // fonction validation du prénom
 function validationfirstName() {
-  let regularExpressions = /^[a-zA-Zà-œÀ-Ÿ][a-zA-Zà-œÀ-Ÿ-]{0,200}[a-zA-Zà-œÀ-Ÿ]$/g;
+  let regularExpressions = /^[a-zA-ZÀ-Ÿ][a-zA-ZÀ-Ÿ-]{0,200}[a-zA-ZÀ-Ÿ]$/g;
 
   if (regularExpressions.test(firstName.value)) {
     firstNameError.innerText = 'Le prénom est valide';
@@ -248,7 +248,7 @@ function validationfirstName() {
 
 // fonction validation du nom
 function validationlastName() {
-  let regularExpressions = /^[a-zA-Zà-œÀ-Ÿ][a-zA-Zà-œÀ-Ÿ-]{0,200}[a-zA-Zà-œÀ-Ÿ]$/g;
+  let regularExpressions = /^[a-zA-ZÀ-Ÿ][a-zA-ZÀ-Ÿ-]{0,200}[a-zA-ZÀ-Ÿ]$/g;
 
   if (regularExpressions.test(lastName.value)) {
     lastNameError.innerText = 'Le nom est valide';
@@ -264,7 +264,7 @@ function validationlastName() {
 
 // fonction validation de l'adresse
 function validationaddress() {
-  let regularExpressions = /^[0-9]{0,6}[ ][a-zA-Zà-œÀ-Ÿ -]{0,200}[a-zA-Zà-œÀ-Ÿ]$/g;
+  let regularExpressions = /^[\d]{0,6}[ ][a-zA-ZÀ-Ÿ -]{0,200}[a-zA-ZÀ-Ÿ]$/g;
 
   if (regularExpressions.test(address.value)) {
     addressError.innerText = "L'adresse est valide";
@@ -280,7 +280,7 @@ function validationaddress() {
 
 // fonction validation de la ville
 function validationcity() {
-  let regularExpressions = /^[a-zA-Zà-œÀ-Ÿ][a-zA-Zà-œÀ-Ÿ\- ]{1,180}[a-zA-Zà-œÀ-Ÿ]{1,180}$/g;
+  let regularExpressions = /^[a-zA-ZÀ-Ÿ][a-zA-ZÀ-Ÿ\- ]{1,180}[a-zA-ZÀ-Ÿ]{1,180}$/g;
 
   if (regularExpressions.test(city.value)) {
     cityError.innerText = 'La ville est valide';
@@ -296,7 +296,7 @@ function validationcity() {
 
 // fonction validation de l'email
 function validationEmail() {
-  let regularExpressions = /^[a-zA-z][a-zA-z0-9.-]{2,85}@[a-zA-z0-9]{2,84}\.[a-zA-z]{2,84}$/g;
+  let regularExpressions = /^[a-zA-Z][a-zA-Z0-9.-]{2,85}@[a-zA-Z0-9]{2,84}\.[a-zA-Z]{2,84}$/g;
 
   if (regularExpressions.test(email.value)) {
     emailError.innerText = "L'adresse mail est valide";
@@ -308,17 +308,6 @@ function validationEmail() {
     emailError.style.color = '#fbbcbc';
   }
   return false;
-}
-
-// récuperer les informations du Contact
-class Contact {
-  constructor(firstName, lastName, address, city, email) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.address = address;
-    this.city = city;
-    this.email = email;
-  }
 }
 
 // bouton commande pour faire les tests et récupérer les informations contact et produit si test validé
@@ -348,7 +337,15 @@ submit.addEventListener('click', (event) => {
   if (firstNameValid && lastNameValid && addressValid && cityValid && emailValid && basket.length < 1) {
     alert("Vous n'avez rien dans le panier");
   } else if (firstNameValid && lastNameValid && addressValid && cityValid && emailValid) {
-    let contact = new Contact(firstName.value, lastName.value, address.value, city.value, email.value);
+    let contact = {
+      firstName: firstName.value,
+      lastName: lastName.value,
+      address: address.value,
+      city: city.value,
+      email: email.value,
+    };
+
+    console.log(contact);
 
     // On ne va envoyer que les ID des produits car l'API ne prend que les ID
     let products = [];

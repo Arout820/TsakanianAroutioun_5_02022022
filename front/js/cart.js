@@ -345,46 +345,38 @@ submit.addEventListener('click', (event) => {
     emailError.innerText = "L'adresse mail n'est pas valide !";
   }
 
-  if (
-    firstNameValid == true &&
-    lastNameValid == true &&
-    addressValid == true &&
-    cityValid == true &&
-    emailValid == true
-  ) {
-    if (basket.length < 1) {
-      alert("Vous n'avez rien dans le panier");
-    } else {
-      let contact = new Contact(firstName.value, lastName.value, address.value, city.value, email.value);
+  if (firstNameValid && lastNameValid && addressValid && cityValid && emailValid && basket.length < 1) {
+    alert("Vous n'avez rien dans le panier");
+  } else if (firstNameValid && lastNameValid && addressValid && cityValid && emailValid) {
+    let contact = new Contact(firstName.value, lastName.value, address.value, city.value, email.value);
 
-      // On ne va envoyer que les ID des produits car l'API ne prend que les ID
-      let products = [];
-      for (const i in basket) {
-        products.push(basket[i].id);
-      }
-
-      const purchase = { products, contact };
-
-      // envoie de donnée à l'API
-      const sendPurchaseToApi = fetch('http://localhost:3000/api/products/order', {
-        method: 'POST',
-        body: JSON.stringify(purchase),
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-      });
-
-      sendPurchaseToApi.then(async (res) => {
-        try {
-          let resultat = await res.json();
-          window.location = `confirmation.html?orderId=${resultat.orderId}`;
-        } catch (error) {
-          console.log(error);
-        }
-      });
-
-      console.log(sendPurchaseToApi);
+    // On ne va envoyer que les ID des produits car l'API ne prend que les ID
+    let products = [];
+    for (const i in basket) {
+      products.push(basket[i].id);
     }
+
+    const purchase = { products, contact };
+
+    // envoie de donnée à l'API
+    const sendPurchaseToApi = fetch('http://localhost:3000/api/products/order', {
+      method: 'POST',
+      body: JSON.stringify(purchase),
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+
+    sendPurchaseToApi.then(async (res) => {
+      try {
+        let resultat = await res.json();
+        window.location = `confirmation.html?orderId=${resultat.orderId}`;
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
+    console.log(sendPurchaseToApi);
   }
 });
